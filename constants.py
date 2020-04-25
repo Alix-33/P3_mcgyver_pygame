@@ -1,10 +1,14 @@
 # load text file
-maze_file = "./assets/lab_mcgyver.txt"
+MAZE_FILE = "D:/Alix/Jeu McGyver_pygame/P3_01_programme/assets/lab_mcgyver.txt"
 
 # load image
-image_path = "./assets/"
+IMAGE_PATH = "D:/Alix/Jeu McGyver_pygame/P3_01_programme/assets/"
 
 # window settings
-nombre_sprite_cote = 15
-sprite_size = 30
-window_side = nombre_sprite_cote * sprite_size
+NB_SPRITE_SIDE = 15
+SPRITE_SIZE = 30
+WINDOW_SIDE = NB_SPRITE_SIDE * SPRITE_SIZE
+
+# window data
+WINDOW_TITLE = "McGyver game_inventory: "
+WINDOW_ICON = "D:/Alix/Jeu McGyver_pygame/P3_01_programme/assets/3.png"

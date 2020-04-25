@@ -1,7 +1,13 @@
 from random import randint
 from Mc_Gyver import McGyver
-from Item import Needle, Ether, Tube
-from Tile import Guardian, Wall, Lane
+from Item import Item
+from Needle import Needle
+from Tube import Tube
+from Ether import Ether
+from Tile import Tile
+from Guardian import Guardian
+from Lane import Lane
+from Wall import Wall
 from constants import *
 import pygame
 
@@ -9,29 +15,30 @@ import pygame
 class Maze:
     
     #constructor actions: load text file (with "load_maze" method))  + insert items randomly (with "create_items" method from the items tupple).
-    def __init__(self, file_name, window):
+    def __init__(self, file_name, window, icon):
         self.window = window
-        self.data2 = self.load_maze2(file_name)
-        self.items = ("A","T","E")
-        self.create_items2() 
+        self.data2 = self.load_maze(file_name)
+        self.items = ("N","T","E")
+        self.create_items()
+        self.icon = pygame.display.set_icon(icon)
 
     #find a tile in the maze, if this tile is an instance of the class Tile.
-    def find_tile2(self, tile):
+    def find_tile(self, tile):
         for i in range(len(self.data2)):     
             for j in range(len(self.data2[i])): 
                 if isinstance(self.data2[i][j], tile):
                     return [i,j]
         return None
     
-    #give the tile position
-    def get_tile (self, i, j):
+    #give the tile at the i,j position
+    def get_tile(self, i, j):
         return self.data2[i][j]
 
     #print the tile at the given position
-    def set_tile( self, i, j, tile):
+    def set_tile(self, i, j, tile):
         self.data2[i][j] = tile
 
-    def load_maze2(self,file_name):
+    def load_maze(self, file_name):
         data = []
         with open(file_name) as f:
             #f= line list -> first loop to add each line in "data" list
@@ -52,10 +59,10 @@ class Maze:
         return data
 
     #get items symbol instead of its character in the text file (given in each class), for each item in the "items" tupple (given in Maze constructor)
-    def create_items2(self):
+    def create_items(self):
         for item in self.items:
-            pos = self.get_random_empty_tile2()
-            if item == "A":
+            pos = self.get_random_empty_tile()
+            if item == "N":
                 self.data2[pos[0]][pos[1]] = Needle()
             elif item == "E":
                 self.data2[pos[0]][pos[1]] = Ether()
@@ -63,7 +70,7 @@ class Maze:
                 self.data2[pos[0]][pos[1]] = Tube()
     
     #get random position inside the maze 
-    def get_random_empty_tile2(self):
+    def get_random_empty_tile(self):
         while True:
             row = randint(0, len(self.data2)-1)
             col = randint(0, len(self.data2)-1)
@@ -72,14 +79,14 @@ class Maze:
                 return [row, col]
 
     #print the maze (loaded in load_maze)
-    def draw_maze2(self):
+    def draw_maze(self):
         pygame.draw.rect(self.window, (0,0,0), (0,0)+ self.window.get_size())
         line = 0
         for row_data in self.data2:
             col = 0
             for tile in row_data:
-                x = col * sprite_size
-                y = line * sprite_size
+                x = col * SPRITE_SIZE
+                y = line * SPRITE_SIZE
                 if tile.image is not None:
                     self.window.blit(tile.image, (x,y))         
                 col += 1

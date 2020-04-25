@@ -1,63 +1,57 @@
-from Tile import Tile, Lane, Guardian
-from Item import Item
 import pygame
-from pygame.locals import *
-pygame.init()
+from Tile import Tile
+from Lane import Lane
+from Guardian import Guardian
+from Item import Item
+
+
 
 class McGyver(Tile):
-    # def __repr__(self):
-    #     return "⚪"
     #constructor action: when mg is out = True -> end of the game.
     def __init__(self):
         self.is_out = False
         self.load_image("3")
-    
-    def move2(self, maze):
-        #wait for player (+ translate the input in capital letters):
-        # direction = input("(Droite = D, Gauche = G, Haut = H, Bas = B, Quitter = Q) Votre choix?: ").upper()
-        modifs = (0,0)
-        #give the position modifications depending on the player answer:
-        for event in pygame.event.get():
-            if event.type == QUIT or event.type == KEYDOWN and event.key == K_ESCAPE:
-                self.is_out = True
-            if event.type == KEYDOWN:
-                if event.key == K_RIGHT:
-                    modifs = (0, 1)
-                elif event.key == K_LEFT:
-                    modifs = (0, -1)
-                elif event.key == K_UP:
-                    modifs = (-1, 0)
-                elif event.key == K_DOWN:
-                    modifs = (1, 0)
-        
-        self.update_position2(maze, modifs)
+        self.inventory = []
+        self.message = None
+
+    def get_message(self):
+        if self.message is None:
+            return f"McGyver game_inventory:{self.inventory}"
+        else:
+            return self.message
 
     #depending on the player answer: update McGyver position
-    def update_position2(self, maze, modifs):
+    def update_position(self, maze, modifs):
+        if self.is_out:
+            return
         #initial position = Mcgyver tile in maze
         #update position inside the maze
-        pos = maze.find_tile2(McGyver)
+        pos = maze.find_tile(McGyver)
         lin = pos[0] + modifs[0]
-        lin = min(lin,14)
+        lin = min(lin, 14)
+        lin = max(0, lin)
         col = pos[1] + modifs[1]
         col = min(col, 14)
+        col = max(0, col)
         
         #if the new position (found with get_tile) is an item, print a lane (with set_tile)
-        if isinstance(maze.get_tile(lin, col), Item):
-            maze.set_tile(lin,col,Lane())
+        tile = maze.get_tile(lin, col)
+        if isinstance(tile, Item):
+            self.inventory.append(tile.name)
+            maze.set_tile(lin, col, Lane())
+
         #if the new position is Guardian -> check victory
         if isinstance(maze.get_tile(lin, col), Guardian):
             self.check_victory(maze)
-            #mg is out = True: end of the game
-            self.is_out = True
         #if the new position is a lane: replace by mg, and print lane instead of old position
         if isinstance(maze.get_tile(lin, col), Lane):
             maze.set_tile(pos[0], pos[1], Lane())
-            maze.set_tile(lin,col, self)
+            maze.set_tile(lin, col, self)
 
-    def check_victory(self, maze):       
+    def check_victory(self, maze):
+        self.is_out = True
         #if an item is found in maze: lost game (else, game won)
-        if maze.find_tile2(Item):
-            print("You're dead!")
+        if maze.find_tile(Item):
+            self.message = "You're dead! Press F1 to reload"
         else:
-            print("You win!")
+            self.message = "You win! Press F1 to reload"
