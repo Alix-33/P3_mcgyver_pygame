@@ -1,4 +1,5 @@
-from Tile import Tile
+from tile import Tile
+
 
 class Guardian(Tile):
     def __init__(self):

@@ -1,5 +1,6 @@
-from Tile import Tile
-from Item import Item
+from tile import Tile
+from item import Item
+
 
 class Tube(Item):
     def __init__(self):
