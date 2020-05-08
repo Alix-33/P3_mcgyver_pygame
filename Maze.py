@@ -36,13 +36,13 @@ class Maze:
     def get_tile(self, i, j):
         """give the tile at the i,j position
             i: line
-            j: colone"""
+            j: column"""
         return self.data[i][j]
 
     def set_tile(self, i, j, tile):
         """print the tile at the given position
             i: line
-            j: colone"""
+            j: column"""
         self.data[i][j] = tile
 
     def load_maze(self, file_name):
@@ -73,7 +73,7 @@ class Maze:
         (given in each class),
         for each item in the "items" tupple (given in Maze constructor),
         at the position (pos) given in get_random_empty_tile method
-        pos= [line, colone]"""
+        pos= [line, column]"""
         for item in self.items:
             pos = self.get_random_empty_tile()
             if item == "N":
